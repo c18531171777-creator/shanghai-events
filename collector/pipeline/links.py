@@ -1,8 +1,10 @@
-"""链接兜底 —— 没有官方链接的活动补一个"按标题搜索"链接,保证每条都能点开。
+"""链接兜底 —— 没有官方链接的活动补一个"按标题搜索"链接,保证每条点开都有有效信息。
 
-  · 演出/体育 → 大麦搜索(方便找票)
-  · 其他(展会等) → 百度搜索(找官方信息)
+统一用百度搜索兜底(国内可达、按活动名一定能搜到新闻/购票/详情):
+  · 演出/体育 → 搜 "<标题> 购票"(偏向票务页)
+  · 其他(展会等) → 搜 "<标题> 上海"
 有些源(猫眼卡片走 JS、部分策展活动)本身没有 href,靠这一步补齐。
+(曾用大麦站内搜索,但按完整标题常搜不到 → 改百度更可靠。)
 """
 from __future__ import annotations
 
@@ -18,9 +20,10 @@ def add_fallback_links(events: List[Event]) -> List[Event]:
         if e.official_url:
             continue
         if e.type in ("演出", "体育"):
-            e.official_url = f"https://search.damai.cn/search.html?keyword={quote(e.title)}"
+            q = f"{e.title} 购票"
         else:
-            e.official_url = f"https://www.baidu.com/s?wd={quote(e.title + ' 上海')}"
+            q = f"{e.title} 上海"
+        e.official_url = f"https://www.baidu.com/s?wd={quote(q)}"
         n += 1
-    print(f"[links] 补充搜索链接 {n} 条")
+    print(f"[links] 补充百度搜索兜底 {n} 条")
     return events
