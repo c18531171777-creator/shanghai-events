@@ -25,6 +25,7 @@ from sources.curated import CuratedSource
 from sources.jufair import JufairSource
 from sources.jussevent import JussventSource
 from sources.maoyan import MaoyanSource
+from sources.shcstheatre import ShcstheatreSource
 from sources.wenhuayun import WenhuayunSource
 from store import cloudbase, html_preview, local_json, site
 
@@ -33,6 +34,7 @@ ENABLED_SOURCES = [
     CuratedSource(),     # ✅ 重大活动策展骨架(WAIC/进博/大师赛…,带真实日期)
     MaoyanSource(),      # ✅ 猫眼演出: 演唱会/剧场/马戏/魔术(带日期/场馆)
     JufairSource(),      # ✅ 聚展: 上海国际展会(带日期+链接)
+    ShcstheatreSource(), # ✅ 上海文化广场: 音乐剧/话剧/舞剧排期
     BendibaoSource(),    # ✅ 本地宝: 展会/演出(补充,日期多待核实)
     JussventSource(),    # ✅ 久事体育: 官方赛事动态
     WenhuayunSource(),   # ⏳ 待抓包对接(亲子内容最多,优先)

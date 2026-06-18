@@ -199,6 +199,28 @@ EVENTS = [
         "kid": False, "age": "", "featured": False, "url": "",
         "note": "往年约 3 月", "tags": ["半导体"],
     },
+    # —— 常驻剧场(官网为 SPA 抓不到排期,列为场馆入口,点击看官方排期)——
+    {
+        "title": "上海大剧院", "type": "演出",
+        "start": "", "end": "", "venue": "人民大道300号(人民广场)",
+        "kid": True, "age": "全年龄", "featured": False,
+        "url": "https://www.shgtheatre.com/", "note": "歌剧/芭蕾/话剧,排期见官网",
+        "tags": ["剧场"],
+    },
+    {
+        "title": "上海东方艺术中心", "type": "演出",
+        "start": "", "end": "", "venue": "丁香路425号(浦东)",
+        "kid": True, "age": "全年龄", "featured": False,
+        "url": "https://www.shoac.com.cn/", "note": "音乐会/歌剧/亲子,排期见官网",
+        "tags": ["剧场"],
+    },
+    {
+        "title": "凯迪拉克·上海音乐厅", "type": "演出",
+        "start": "", "end": "", "venue": "延安东路523号",
+        "kid": True, "age": "全年龄", "featured": False,
+        "url": "https://www.shanghaiconcerthall.com.cn/",
+        "note": "音乐会/亲子音乐会,排期见官网", "tags": ["剧场"],
+    },
 ]
 
 
