@@ -85,19 +85,22 @@ EVENTS = [
     {
         "title": "上海马戏城 杂技/马戏 驻场秀", "type": "演出",
         "start": "", "end": "", "venue": "上海马戏城",
-        "kid": True, "age": "全年龄", "featured": False, "url": "",
-        "note": "常年驻演(周末有场),猫眼/大麦购票", "tags": ["马戏"],
+        "kid": True, "age": "全年龄", "featured": False,
+        "url": "https://www.shanghaimaxicheng.com/",
+        "note": "ERA时空之旅常驻,节目/购票见官网", "tags": ["马戏"],
     },
     {
         "title": "上海儿童艺术剧场 亲子剧目", "type": "演出",
         "start": "", "end": "", "venue": "上海儿童艺术剧场(梅陇)",
-        "kid": True, "age": "全年龄", "featured": False, "url": "",
-        "note": "常年亲子剧/木偶/音乐会,排期见官网/猫眼", "tags": ["剧场/亲子"],
+        "kid": True, "age": "全年龄", "featured": False,
+        "url": "https://www.shcat.com.cn/zh",
+        "note": "常年亲子剧/木偶/音乐会,排期见官网", "tags": ["剧场/亲子"],
     },
     {
         "title": "上海天文馆", "type": "展会",
         "start": "", "end": "", "venue": "上海天文馆(临港)",
-        "kid": True, "age": "全年龄", "featured": False, "url": "",
+        "kid": True, "age": "全年龄", "featured": False,
+        "url": "https://www.sstm-sam.org.cn/",
         "note": "常年开放,需官网预约;亲子科普顶流", "tags": ["科普/亲子"],
     },
     {
@@ -117,14 +120,16 @@ EVENTS = [
     {
         "title": "上海玻璃博物馆 儿童艺术馆", "type": "展会",
         "start": "", "end": "", "venue": "玻璃博物馆(宝山)",
-        "kid": True, "age": "全年龄", "featured": False, "url": "",
+        "kid": True, "age": "全年龄", "featured": False,
+        "url": "http://www.shmog.org/",
         "note": "玻璃主题亲子体验,常年开放", "tags": ["科普/亲子"],
     },
     {
         "title": "上海木偶剧团 亲子木偶剧", "type": "演出",
         "start": "", "end": "", "venue": "多剧场",
-        "kid": True, "age": "全年龄", "featured": False, "url": "",
-        "note": "常年亲子木偶/皮影,排期见官网/猫眼", "tags": ["剧场/亲子"],
+        "kid": True, "age": "全年龄", "featured": False,
+        "url": "http://www.sh-puppet.com.cn/",
+        "note": "常年亲子木偶/皮影,排期见官网", "tags": ["剧场/亲子"],
     },
     {
         "title": "世界移动通信大会 MWC上海 2026", "type": "展会",
