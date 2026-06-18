@@ -65,7 +65,7 @@ INDEX_HTML = r"""<!doctype html><html lang="zh"><head><meta charset="utf-8">
 <button class="refresh" onclick="load()">🔄 刷新</button></div></header>
 <div class="controls">
  <div class="tabs">
-  <button class="tab on" data-t="live" onclick="setTab(this,'live')">🎫 近期演出</button>
+  <button class="tab on" data-t="live" onclick="setTab(this,'live')">🎫 近期活动</button>
   <button class="tab" data-t="annual" onclick="setTab(this,'annual')">🔥 年度大展</button>
   <button class="tab" data-t="venue" onclick="setTab(this,'venue')">🏛 常驻场馆</button>
   <button class="tab" data-t="b2b" onclick="setTab(this,'b2b')">🏢 行业展</button>

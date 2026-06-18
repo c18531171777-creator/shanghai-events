@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-06-17 21:30",
+ "generatedAt": "2026-06-17 21:37",
  "count": 132,
  "events": [
   {
@@ -809,26 +809,6 @@
    "kid_unfit": false
   },
   {
-   "title": "【年度最佳】高口碑必看！豫园爆笑钞级嫌疑人《见钱眼开》｜｜沉浸式局中剧｜豪华阵容",
-   "type": "演出",
-   "venue": "次乐元空间",
-   "district": "",
-   "start_date": "2026-06-18",
-   "end_date": "2026-06-30",
-   "open_ticket_time": "",
-   "price_range": "",
-   "kid_friendly": false,
-   "age_range": "",
-   "tags": [],
-   "official_url": "https://search.damai.cn/search.html?keyword=%E5%B9%B4%E5%BA%A6%E6%9C%80%E4%BD%B3%20%E9%AB%98%E5%8F%A3%E7%A2%91%E5%BF%85%E7%9C%8B%EF%BC%81%E8%B1%AB%E5%9B%AD%E7%88%86%E7%AC%91%E9%92%9E%E7%BA%A7%E5%AB%8C%E7%96%91%E4%BA%BA%20%E8%A7%81%E9%92%B1%E7%9C%BC",
-   "featured": false,
-   "note": "",
-   "first_seen": "2026-06-17",
-   "kind": "临时",
-   "audience": "公众",
-   "kid_unfit": false
-  },
-  {
    "title": "原版音乐剧《剧院魅影》四十周年上海告别季",
    "type": "演出",
    "venue": "上海大剧院",
@@ -844,6 +824,26 @@
    "featured": false,
    "note": "",
    "first_seen": "2000-01-01",
+   "kind": "临时",
+   "audience": "公众",
+   "kid_unfit": false
+  },
+  {
+   "title": "【年度最佳】高口碑必看！豫园爆笑钞级嫌疑人《见钱眼开》｜｜沉浸式局中剧｜豪华阵容",
+   "type": "演出",
+   "venue": "次乐元空间",
+   "district": "",
+   "start_date": "2026-06-18",
+   "end_date": "2026-06-30",
+   "open_ticket_time": "",
+   "price_range": "",
+   "kid_friendly": false,
+   "age_range": "",
+   "tags": [],
+   "official_url": "https://search.damai.cn/search.html?keyword=%E5%B9%B4%E5%BA%A6%E6%9C%80%E4%BD%B3%20%E9%AB%98%E5%8F%A3%E7%A2%91%E5%BF%85%E7%9C%8B%EF%BC%81%E8%B1%AB%E5%9B%AD%E7%88%86%E7%AC%91%E9%92%9E%E7%BA%A7%E5%AB%8C%E7%96%91%E4%BA%BA%20%E8%A7%81%E9%92%B1%E7%9C%BC",
+   "featured": false,
+   "note": "",
+   "first_seen": "2026-06-17",
    "kind": "临时",
    "audience": "公众",
    "kid_unfit": false
@@ -1947,7 +1947,7 @@
    "note": "",
    "first_seen": "2026-06-17",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2013,7 +2013,7 @@
    "note": "",
    "first_seen": "2026-06-17",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2035,7 +2035,7 @@
    "note": "",
    "first_seen": "2026-06-17",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2057,7 +2057,7 @@
    "note": "",
    "first_seen": "2000-01-01",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2079,7 +2079,7 @@
    "note": "",
    "first_seen": "2026-06-16",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2101,7 +2101,7 @@
    "note": "",
    "first_seen": "2026-06-17",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2123,7 +2123,7 @@
    "note": "",
    "first_seen": "2000-01-01",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2145,7 +2145,7 @@
    "note": "",
    "first_seen": "2000-01-01",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2189,7 +2189,7 @@
    "note": "",
    "first_seen": "2026-06-17",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2211,7 +2211,7 @@
    "note": "",
    "first_seen": "2026-06-16",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2233,7 +2233,7 @@
    "note": "",
    "first_seen": "2026-06-16",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2255,7 +2255,7 @@
    "note": "",
    "first_seen": "2026-06-17",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2278,7 +2278,7 @@
    "note": "",
    "first_seen": "2026-06-17",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2300,7 +2300,7 @@
    "note": "",
    "first_seen": "2000-01-01",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2344,7 +2344,7 @@
    "note": "",
    "first_seen": "2026-06-16",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2388,7 +2388,7 @@
    "note": "",
    "first_seen": "2026-06-16",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2410,7 +2410,7 @@
    "note": "",
    "first_seen": "2000-01-01",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2432,7 +2432,7 @@
    "note": "",
    "first_seen": "2026-06-17",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2476,7 +2476,7 @@
    "note": "",
    "first_seen": "2026-06-17",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
@@ -2520,7 +2520,7 @@
    "note": "",
    "first_seen": "2000-01-01",
    "kind": "临时",
-   "audience": "公众",
+   "audience": "B2B",
    "kid_unfit": false
   },
   {
