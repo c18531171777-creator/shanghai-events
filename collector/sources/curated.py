@@ -20,13 +20,15 @@ EVENTS = [
     {
         "title": "世界人工智能大会 WAIC 2026", "type": "展会",
         "start": "2026-07-17", "end": "2026-07-20", "venue": "世博展览馆",
-        "kid": True, "age": "8岁+", "featured": True, "url": "",
+        "kid": True, "age": "8岁+", "featured": True,
+        "url": "https://www.worldaic.com.cn/",
         "note": "AI 科普展区适合大童", "tags": ["AI/科技"],
     },
     {
         "title": "中国国际工业博览会(工博会)2026", "type": "展会",
         "start": "2026-10-12", "end": "2026-10-16", "venue": "国家会展中心(虹桥)",
-        "kid": True, "age": "8岁+", "featured": True, "url": "",
+        "kid": True, "age": "8岁+", "featured": True,
+        "url": "https://www.ciif-expo.com/",
         "note": "机器人/智能制造展区", "tags": ["科技/机器人"],
     },
     {
@@ -51,7 +53,8 @@ EVENTS = [
     {
         "title": "上海书展", "type": "展会",
         "start": "", "end": "", "venue": "上海展览中心",
-        "kid": True, "age": "全年龄", "featured": False, "url": "",
+        "kid": True, "age": "全年龄", "featured": False,
+        "url": "http://www.shbookfair.cn/",
         "note": "档期待官方确认(往年 8 月中旬),非常适合带娃", "tags": ["文化/亲子"],
     },
     {
@@ -100,13 +103,15 @@ EVENTS = [
     {
         "title": "上海自然博物馆", "type": "展会",
         "start": "", "end": "", "venue": "自然博物馆(静安雕塑公园)",
-        "kid": True, "age": "全年龄", "featured": False, "url": "",
+        "kid": True, "age": "全年龄", "featured": False,
+        "url": "https://www.snhm.org.cn/",
         "note": "常年开放+当期特展,需预约;亲子科普", "tags": ["科普/亲子"],
     },
     {
         "title": "上海科技馆", "type": "展会",
         "start": "", "end": "", "venue": "上海科技馆(浦东)",
-        "kid": True, "age": "全年龄", "featured": False, "url": "",
+        "kid": True, "age": "全年龄", "featured": False,
+        "url": "https://www.sstm.org.cn/",
         "note": "常年开放,亲子科普", "tags": ["科普/亲子"],
     },
     {

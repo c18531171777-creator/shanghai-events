@@ -1,17 +1,32 @@
-"""链接兜底 —— 没有官方链接的活动补一个"按标题搜索"链接,保证每条点开都有有效信息。
+"""链接兜底 —— 没有官方链接的活动,指向"大麦购票搜索"(购票网站),拒绝百度。
 
-统一用百度搜索兜底(国内可达、按活动名一定能搜到新闻/购票/详情):
-  · 演出/体育 → 搜 "<标题> 购票"(偏向票务页)
-  · 其他(展会等) → 搜 "<标题> 上海"
-有些源(猫眼卡片走 JS、部分策展活动)本身没有 href,靠这一步补齐。
-(曾用大麦站内搜索,但按完整标题常搜不到 → 改百度更可靠。)
+策略:
+  · 有官方/详情链接(策展官网、聚展、本地宝、文化广场等)→ 用其本身,不动;
+  · 没有的(主要是猫眼演出、个别策展)→ 大麦站内搜索(购票网站),关键词做清洗
+    (去年份、去"巡回演唱会/上海站"等后缀、去书名号),提高命中。
+说明:用户明确拒绝百度搜索页;大麦覆盖演唱会/话剧/展览/赛事,是购票直达。
 """
 from __future__ import annotations
 
+import re
 from typing import List
 from urllib.parse import quote
 
 from models import Event
+
+_STRIP = re.compile(
+    r"(20\d{2}年?|巡回演唱会|全国巡演|世界巡演|巡演|演唱会|粉丝见面会|见面会|"
+    r"上海站|·上海站|-上海站|LIVE|tour)",
+    re.IGNORECASE,
+)
+_PUNCT = re.compile(r"[《》「」【】（）()·\-—|/]+")
+
+
+def _keyword(title: str) -> str:
+    t = _STRIP.sub(" ", title)
+    t = _PUNCT.sub(" ", t)
+    t = " ".join(t.split())
+    return (t[:24] or title).strip()
 
 
 def add_fallback_links(events: List[Event]) -> List[Event]:
@@ -19,11 +34,9 @@ def add_fallback_links(events: List[Event]) -> List[Event]:
     for e in events:
         if e.official_url:
             continue
-        if e.type in ("演出", "体育"):
-            q = f"{e.title} 购票"
-        else:
-            q = f"{e.title} 上海"
-        e.official_url = f"https://www.baidu.com/s?wd={quote(q)}"
+        e.official_url = (
+            f"https://search.damai.cn/search.html?keyword={quote(_keyword(e.title))}"
+        )
         n += 1
-    print(f"[links] 补充百度搜索兜底 {n} 条")
+    print(f"[links] 大麦购票搜索兜底 {n} 条(无百度)")
     return events
