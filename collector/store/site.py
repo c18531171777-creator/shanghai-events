@@ -73,6 +73,7 @@ INDEX_HTML = r"""<!doctype html><html lang="zh"><head><meta charset="utf-8">
  .prog li a{color:#1a6fc0;text-decoration:none}
  .empty{padding:60px 0;text-align:center;color:#999}
  .health{margin-top:14px;font-size:12px;color:#b45309;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:8px 12px;line-height:1.5}
+ .more{display:block;width:100%;margin-top:12px;border:0;background:#eef2ff;color:#1f6feb;padding:12px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer}
 </style></head><body><div class="wrap">
 <header><h1>📡 上海家庭活动雷达</h1>
 <div class="sub" id="sub">加载中…</div>
@@ -89,18 +90,16 @@ INDEX_HTML = r"""<!doctype html><html lang="zh"><head><meta charset="utf-8">
   <button class="on" data-k="all" onclick="setF(this,'all')">全部</button>
   <button data-k="new" onclick="setF(this,'new')">🆕 最新</button>
   <button data-k="kid" onclick="setF(this,'kid')">👨‍👩‍👧 亲子</button>
-  <button data-k="体育" onclick="setF(this,'体育')">体育</button>
-  <button data-k="展会" onclick="setF(this,'展会')">展会</button>
-  <button data-k="演出" onclick="setF(this,'演出')">演出</button>
  </div>
 </div>
 <div id="list"><div class="empty">加载中…</div></div>
+<button class="more" id="moreBtn" style="display:none" onclick="showFar=true;apply()"></button>
 <div class="health" id="health" style="display:none"></div>
 </div>
 <script>
 const CAT={'体育':'#e4572e','展会':'#1f6feb','演出':'#9b51e0'},DEF='#16a34a',NEW_DAYS=7;
 const KMAP={'年度固定':'annual','固定场馆':'venue','临时':'live'};
-let curTab='live',curF='all',NEWCUT='';
+let curTab='live',curF='all',NEWCUT='',showFar=false;
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function fmtDate(s,e){if(!s)return '档期待定';const d=s.split('-');if(d.length<3)return s;const m=+d[1],day=+d[2];
  if(e&&e!==s){const x=e.split('-');if(x.length===3){const em=+x[1],ed=+x[2];return em===m?`${m}月${day}–${ed}日`:`${m}月${day}日–${em}月${ed}日`;}}
@@ -119,20 +118,25 @@ function card(ev,t){const color=CAT[ev.type]||DEF,kind=(ev.audience==='B2B')?'b2
  if(ev.kid_friendly){const lab='👨‍👩‍👧 亲子'+(ev.age_range?(' '+ev.age_range):'');p+=`<span class="pill kid">${esc(lab)}</span>`;}
  let meta=`📅 ${fmtDate(ev.start_date,ev.end_date)}`;if(ev.venue)meta+=`&nbsp;&nbsp;📍 ${esc(ev.venue)}`;
  if(ev.sessions&&ev.sessions.length>1)meta+=`<br>🎬 多场次 ${ev.sessions.map(d=>esc(d.slice(5))).join('、')}`;
+ let days=9999;if(ev.start_date){const sd=new Date(ev.start_date+'T00:00:00');if(!isNaN(sd))days=Math.round((sd-t)/864e5);}
  const note=ev.note?`<div class="note">⚠ ${esc(ev.note)}</div>`:'';
  const price=ev.price_range?`<div class="price">${esc(ev.price_range)}</div>`:'';
  let prog='';
  if(ev.programs&&ev.programs.length){prog='<div class="prog"><b>🎭 近期在演</b><ul>'+ev.programs.map(p=>`<li><a href="${esc(p.u||'#')}" target="_blank" rel="noopener">${esc(p.t)}${p.d?(' · '+p.d.slice(5)):''}</a></li>`).join('')+'</ul></div>';}
- return `<div class="card" style="border-left-color:${color}" data-kind="${kind}" data-type="${esc(ev.type)}" data-kid="${ev.kid_friendly?1:0}" data-new="${isNew?1:0}" data-unfit="${ev.kid_unfit?1:0}"><div class="top">${p}</div><div class="title">${title}</div><div class="meta">${meta}</div>${note}${price}${prog}</div>`;}
+ return `<div class="card" style="border-left-color:${color}" data-kind="${kind}" data-type="${esc(ev.type)}" data-kid="${ev.kid_friendly?1:0}" data-new="${isNew?1:0}" data-unfit="${ev.kid_unfit?1:0}" data-days="${days}"><div class="top">${p}</div><div class="title">${title}</div><div class="meta">${meta}</div>${note}${price}${prog}</div>`;}
 function mark(sel,btn){document.querySelectorAll(sel+' button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
-function setTab(b,t){curTab=t;mark('.tabs',b);apply();}
+function setTab(b,t){curTab=t;showFar=false;mark('.tabs',b);apply();}
 function setF(b,f){curF=f;mark('.filters',b);apply();}
-function apply(){let n=0;
+function apply(){let n=0,far=0;
  document.querySelectorAll('.card').forEach(c=>{
    const tabOk=c.dataset.kind===curTab;
-   const fOk=curF==='all'||(curF==='new'?c.dataset.new==='1':curF==='kid'?(c.dataset.kid==='1'&&c.dataset.unfit!=='1'):c.dataset.type===curF);
-   const ok=tabOk&&fOk;c.style.display=ok?'block':'none';if(ok)n++;});
- document.getElementById('emptyTip').style.display=n?'none':'block';}
+   const fOk=curF==='all'||(curF==='new'?c.dataset.new==='1':(c.dataset.kid==='1'&&c.dataset.unfit!=='1'));
+   let winOk=true;
+   if(curTab==='live'&&tabOk&&fOk&&(+c.dataset.days)>30){winOk=showFar;if(!showFar)far++;}
+   const ok=tabOk&&fOk&&winOk;c.style.display=ok?'block':'none';if(ok)n++;});
+ document.getElementById('emptyTip').style.display=n?'none':'block';
+ const mb=document.getElementById('moreBtn');
+ if(curTab==='live'&&!showFar&&far>0){mb.style.display='block';mb.textContent='📅 查看更远的 '+far+' 个活动';}else mb.style.display='none';}
 function render(data){const evts=(data.events||[]).slice();
  const t=new Date();t.setHours(0,0,0,0);
  const cc=new Date(t);cc.setDate(cc.getDate()-(NEW_DAYS-1));NEWCUT=cc.toISOString().slice(0,10);
