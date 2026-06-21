@@ -1506,9 +1506,67 @@
     "sessions": [],
     "raw_text": "上海虹口足球场",
     "_id": "0ea5d3d2f4e20013"
+   },
+   {
+    "title": "上海西岸大剧院",
+    "type": "演出",
+    "source": "curated",
+    "official_url": "",
+    "venue": "徐汇西岸(龙腾大道2266号·西岸梦中心)",
+    "district": "",
+    "start_date": "",
+    "end_date": "",
+    "open_ticket_time": "",
+    "price_range": "",
+    "price_min": null,
+    "kid_friendly": true,
+    "age_range": "全年龄",
+    "tags": [
+     "剧场"
+    ],
+    "cover": "",
+    "status": "upcoming",
+    "featured": false,
+    "kind": "固定场馆",
+    "audience": "公众",
+    "kid_unfit": false,
+    "note": "音乐剧/演唱会/话剧,1673座大剧场,排期见购票链接",
+    "first_seen": "",
+    "sessions": [],
+    "raw_text": "上海西岸大剧院",
+    "_id": "7cab9d823bf76c95"
+   },
+   {
+    "title": "上海东方体育中心",
+    "type": "演出",
+    "source": "curated",
+    "official_url": "",
+    "venue": "浦东(近世博·地铁6/8/11号线东方体育中心站)",
+    "district": "",
+    "start_date": "",
+    "end_date": "",
+    "open_ticket_time": "",
+    "price_range": "",
+    "price_min": null,
+    "kid_friendly": true,
+    "age_range": "全年龄",
+    "tags": [
+     "演出"
+    ],
+    "cover": "",
+    "status": "upcoming",
+    "featured": false,
+    "kind": "固定场馆",
+    "audience": "公众",
+    "kid_unfit": false,
+    "note": "大型演唱会/体育赛事场馆(海上王冠),购票链接见下",
+    "first_seen": "",
+    "sessions": [],
+    "raw_text": "上海东方体育中心",
+    "_id": "a3b429675965f927"
    }
   ],
-  "count": 52,
+  "count": 54,
   "last_success": "2026-06-21"
  },
  "maoyan": {
