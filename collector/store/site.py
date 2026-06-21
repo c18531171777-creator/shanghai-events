@@ -116,7 +116,7 @@ function card(ev,t){const color=CAT[ev.type]||DEF,kind=(ev.audience==='B2B')?'b2
  if(ev.featured)p+='<span class="pill feat">🔥 重磅</span>';
  const c=cd(ev.start_date,ev.end_date,t);if(c)p+=`<span class="pill cd ${c[1]?'soon':''}">${c[0]}</span>`;
  if(ev.kid_friendly){const lab='👨‍👩‍👧 亲子'+(ev.age_range?(' '+ev.age_range):'');p+=`<span class="pill kid">${esc(lab)}</span>`;}
- let meta=`📅 ${fmtDate(ev.start_date,ev.end_date)}`;if(ev.venue)meta+=`&nbsp;&nbsp;📍 ${esc(ev.venue)}`;
+ let meta;if(kind==='venue'){meta=ev.venue?`📍 ${esc(ev.venue)}`:'';}else{meta=`📅 ${fmtDate(ev.start_date,ev.end_date)}`;if(ev.venue)meta+=`&nbsp;&nbsp;📍 ${esc(ev.venue)}`;}
  if(ev.sessions&&ev.sessions.length>1)meta+=`<br>🎬 多场次 ${ev.sessions.map(d=>esc(d.slice(5))).join('、')}`;
  let days=9999;if(ev.start_date){const sd=new Date(ev.start_date+'T00:00:00');if(!isNaN(sd))days=Math.round((sd-t)/864e5);}
  const note=ev.note?`<div class="note">⚠ ${esc(ev.note)}</div>`:'';
