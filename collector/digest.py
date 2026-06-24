@@ -2,8 +2,8 @@
 """沪上遛遛 · 每周精选邮件 —— 读 events.json → 生成 PDF → QQ 邮箱 SMTP 发给家人。
 
 机密只从环境变量(GitHub Secrets)读,绝不写进代码/公开仓库:
-  MAIL_USER = 发信 QQ 邮箱   MAIL_PASS = QQ 授权码(非登录密码)
-  MAIL_TO   = 收件人(逗号分隔)
+  MAIL_USER = 发信邮箱(Gmail/QQ 等)   MAIL_PASS = 应用专用密码/授权码(非登录密码)
+  MAIL_TO   = 收件人(逗号分隔)   MAIL_HOST = SMTP服务器(可选,默认按发信邮箱域名自动选)
 未配置 MAIL_* 时只生成 PDF、不发信(便于本地测试)。
 """
 import datetime
@@ -152,10 +152,15 @@ def send(today):
     with open(OUT, "rb") as f:
         msg.add_attachment(f.read(), maintype="application", subtype="pdf",
                            filename="沪上遛遛_本周精选_%s.pdf" % today.strftime("%Y%m%d"))
-    with smtplib.SMTP_SSL("smtp.qq.com", 465, context=ssl.create_default_context()) as s:
+    host = os.environ.get("MAIL_HOST") or {
+        "gmail.com": "smtp.gmail.com", "qq.com": "smtp.qq.com",
+        "163.com": "smtp.163.com", "126.com": "smtp.126.com",
+        "foxmail.com": "smtp.qq.com", "outlook.com": "smtp-mail.outlook.com",
+    }.get(user.split("@")[-1].lower(), "smtp.gmail.com")
+    with smtplib.SMTP_SSL(host, 465, context=ssl.create_default_context()) as s:
         s.login(user, pw)
         s.send_message(msg)
-    print("[digest] 已发送给:", ", ".join(recipients))
+    print("[digest] 已通过 %s 发送给:" % host, ", ".join(recipients))
 
 
 def main():
