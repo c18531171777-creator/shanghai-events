@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-"""沪上遛遛 · 每周精选邮件 —— 读 events.json → 生成 PDF → QQ 邮箱 SMTP 发给家人。
+"""沪上遛遛 · 每周精选邮件 —— 读 events.json → Chromium 渲染海报风 PDF → 邮件发送。
 
 机密只从环境变量(GitHub Secrets)读,绝不写进代码/公开仓库:
   MAIL_USER = 发信邮箱(Gmail/QQ 等)   MAIL_PASS = 应用专用密码/授权码(非登录密码)
   MAIL_TO   = 收件人(逗号分隔)   MAIL_HOST = SMTP服务器(可选,默认按发信邮箱域名自动选)
 未配置 MAIL_* 时只生成 PDF、不发信(便于本地测试)。
+渲染用 Playwright(无头 Chromium),艺术字体走 Google Fonts。
 """
 import datetime
 import json
@@ -12,22 +13,14 @@ import os
 import smtplib
 import ssl
 from email.message import EmailMessage
-from xml.sax.saxutils import escape
-
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.styles import ParagraphStyle
-from reportlab.lib.units import mm
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.cidfonts import UnicodeCIDFont
-from reportlab.platypus import HRFlowable, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+from html import escape
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 EVENTS = os.path.join(ROOT, "events.json")
 OUT = os.path.join(ROOT, "data", "digest.pdf")
 SITE = "https://c18531171777-creator.github.io/shanghai-events/"
-FONT = "STSong-Light"
-pdfmetrics.registerFont(UnicodeCIDFont(FONT))
+SEC_COLOR = {"本周开票": "#4da3ff", "亲子精选": "#ff8a5b",
+             "最新上架": "#4dd6a0", "重磅活动": "#ff5d8f"}
 
 
 def _today():
@@ -46,7 +39,7 @@ def _upcoming(e, today, win):
     d = _days(s, today) if s else None
     if d is not None and 0 <= d <= win:
         return True
-    en = e.get("end_date")  # 在演(已开始未结束)
+    en = e.get("end_date")
     if d is not None and d < 0 and en and en >= today.isoformat():
         return True
     return False
@@ -83,59 +76,68 @@ def select(data, today):
     kd = lambda e: e.get("start_date") or "9999"  # noqa: E731
     return [
         ("本周开票", sorted(ticket, key=lambda e: e.get("open_ticket_time") or "")),
-        ("亲子精选", sorted(kid, key=kd)[:10]),
-        ("最新上架", sorted(new, key=kd)[:8]),
+        ("亲子精选", sorted(kid, key=kd)[:8]),
+        ("最新上架", sorted(new, key=kd)[:6]),
         ("重磅活动", sorted(feat, key=kd)[:6]),
     ]
 
 
-SEC_COLOR = {"本周开票": "#1f6feb", "亲子精选": "#e8643c",
-             "最新上架": "#159b73", "重磅活动": "#d4356e"}
+SKYLINE = ('<svg class="sky" viewBox="0 0 800 84" preserveAspectRatio="none">'
+           '<g fill="rgba(8,5,24,0.45)">'
+           '<rect x="0" y="52" width="58" height="32"/><rect x="62" y="40" width="34" height="44"/>'
+           '<rect x="102" y="58" width="44" height="26"/><rect x="150" y="32" width="26" height="52"/>'
+           '<rect x="182" y="50" width="50" height="34"/><rect x="238" y="60" width="40" height="24"/>'
+           '<rect x="300" y="46" width="30" height="38"/>'
+           '<rect x="392" y="36" width="8" height="48"/><circle cx="396" cy="30" r="11"/><circle cx="396" cy="54" r="7"/>'
+           '<rect x="430" y="42" width="46" height="42"/><rect x="482" y="28" width="24" height="56"/>'
+           '<rect x="512" y="54" width="48" height="30"/><rect x="566" y="44" width="32" height="40"/>'
+           '<rect x="604" y="58" width="46" height="26"/><rect x="656" y="38" width="26" height="46"/>'
+           '<rect x="688" y="52" width="52" height="32"/><rect x="744" y="46" width="56" height="38"/>'
+           '</g></svg>')
+
+PAGE = """<!doctype html><html lang="zh"><head><meta charset="utf-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+@page{size:A4;margin:0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans SC',sans-serif;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;
+ background:linear-gradient(158deg,#150d35 0%,#3a1c66 36%,#7c2a73 64%,#cc3f59 100%)}
+.hero{position:relative;padding:60px 44px 92px;text-align:center}
+.brand{font-family:'ZCOOL KuaiLe',cursive;font-size:80px;line-height:1;letter-spacing:8px;text-shadow:0 6px 36px rgba(0,0,0,.5)}
+.tag{margin-top:18px;font-size:16px;letter-spacing:5px;color:#ffd9a8;font-weight:500}
+.dt{margin-top:10px;font-size:13px;letter-spacing:3px;color:rgba(255,255,255,.72)}
+.sky{position:absolute;left:0;bottom:0;width:100%;height:84px;display:block}
+.wrap{padding:4px 34px 30px}
+.sec{margin-top:30px}
+.sh{display:inline-block;font-family:'ZCOOL KuaiLe',cursive;font-size:24px;letter-spacing:2px;color:#fff;padding:8px 24px;border-radius:30px}
+.it{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);border-radius:13px;padding:14px 16px;margin-top:13px}
+.itt{font-size:16px;font-weight:700;line-height:1.45}
+.itt a{color:#fff;text-decoration:none}
+.itm{margin-top:7px;font-size:12.5px;color:rgba(255,255,255,.75);line-height:1.55}
+.ft{text-align:center;padding:24px 20px 34px;font-size:11px;letter-spacing:1px;color:rgba(255,255,255,.55)}
+.ft a{color:rgba(255,255,255,.78)}
+</style></head><body>
+<div class="hero"><div class="brand">沪上遛遛</div>
+<div class="tag">上海亲子 · 演出 · 展会 · 赛事</div>
+<div class="dt">__DATE__</div>__SKY__</div>
+<div class="wrap">__CONTENT__</div>
+<div class="ft">数据更新于 __GEN__ &nbsp;·&nbsp; 在线版 <a href="__SITE__">c18531171777-creator.github.io/shanghai-events</a></div>
+</body></html>"""
 
 
-def build_pdf(sections, today, gen):
-    os.makedirs(os.path.dirname(OUT), exist_ok=True)
-    doc = SimpleDocTemplate(OUT, pagesize=A4, title="沪上遛遛 本周精选",
-                            topMargin=14 * mm, bottomMargin=14 * mm,
-                            leftMargin=15 * mm, rightMargin=15 * mm)
-    W = doc.width
-    mt = ParagraphStyle("mt", fontName=FONT, fontSize=25, leading=29, textColor=colors.white)
-    ms = ParagraphStyle("ms", fontName=FONT, fontSize=10.5, leading=16,
-                        textColor=colors.HexColor("#d9ccf7"))
-    it = ParagraphStyle("it", fontName=FONT, fontSize=12, leading=16, spaceBefore=9)
-    meta = ParagraphStyle("meta", fontName=FONT, fontSize=9.5, leading=13,
-                          textColor=colors.HexColor("#6a6a6a"), leftIndent=16, spaceAfter=1)
-    foot = ParagraphStyle("foot", fontName=FONT, fontSize=9, leading=14,
-                          textColor=colors.HexColor("#888888"))
-
-    mast = Table([[[Paragraph("沪上遛遛", mt),
-                    Paragraph("上海亲子 | 演出 | 展会 | 赛事 —— 日更雷达", ms),
-                    Paragraph("%d年%d月%d日 本周精选" % (today.year, today.month, today.day), ms)]]],
-                 colWidths=[W])
-    mast.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#3f2d7a")),
-        ("LEFTPADDING", (0, 0), (-1, -1), 16), ("RIGHTPADDING", (0, 0), (-1, -1), 16),
-        ("TOPPADDING", (0, 0), (-1, -1), 15), ("BOTTOMPADDING", (0, 0), (-1, -1), 15),
-    ]))
-    story = [mast, Spacer(1, 2)]
-
-    seen, any_item = set(), False
+def build_html(sections, today, gen):
+    seen, blocks = set(), []
     for name, items in sections:
         rows = [e for e in items if e.get("title") and e["title"] not in seen]
         if not rows:
             continue
-        any_item = True
-        hexc = SEC_COLOR.get(name, "#555555")
-        sst = ParagraphStyle("s" + name, fontName=FONT, fontSize=14, leading=18,
-                             textColor=colors.white, backColor=colors.HexColor(hexc),
-                             borderPadding=(7, 10, 7, 10), spaceBefore=18, spaceAfter=9)
-        story.append(Paragraph("%s（%d）" % (name, len(rows)), sst))
-        for i, e in enumerate(rows):
+        col = SEC_COLOR.get(name, "#9aa0ff")
+        its = []
+        for e in rows:
             seen.add(e["title"])
             t = escape(e["title"])
             url = e.get("official_url", "")
-            link = '<a href="%s" color="#22357a">%s</a>' % (escape(url), t) if url else t
-            story.append(Paragraph('<font color="%s">●</font> %s' % (hexc, link), it))
+            title = '<a href="%s">%s</a>' % (escape(url), t) if url else t
             bits = [_fmtdate(e, today)]
             if e.get("venue") and e["venue"] != e["title"]:
                 bits.append(escape(e["venue"]))
@@ -144,19 +146,35 @@ def build_pdf(sections, today, gen):
             ot = e.get("open_ticket_time")
             if name == "本周开票" and ot:
                 bits.insert(0, "开票 " + escape(ot))
-            story.append(Paragraph(" | ".join(bits), meta))
-            if i < len(rows) - 1:
-                story.append(HRFlowable(width="100%", thickness=0.4,
-                                        color=colors.HexColor("#e7e7ec"),
-                                        spaceBefore=7, spaceAfter=0))
-    if not any_item:
-        story.append(Paragraph("本周暂无精选,点下方在线版查看全部。", it))
-    story.append(Spacer(1, 16))
-    story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor("#3f2d7a"),
-                            spaceAfter=6))
-    story.append(Paragraph("数据更新于 %s &nbsp;|&nbsp; 在线版 %s" % (escape(gen), SITE), foot))
-    doc.build(story)
-    print("[digest] 已生成 PDF →", OUT)
+            its.append('<div class="it" style="border-left:5px solid %s">'
+                       '<div class="itt">%s</div><div class="itm">%s</div></div>'
+                       % (col, title, " · ".join(bits)))
+        blocks.append('<div class="sec"><span class="sh" style="background:%s;box-shadow:0 7px 22px %s66">'
+                      '%s（%d）</span>%s</div>' % (col, col, name, len(rows), "".join(its)))
+    content = "".join(blocks) or '<div class="it">本周暂无精选,点下方在线版查看全部。</div>'
+    datestr = "%d年%d月%d日 · 本周精选" % (today.year, today.month, today.day)
+    html = PAGE
+    for k, v in (("__DATE__", datestr), ("__SKY__", SKYLINE), ("__CONTENT__", content),
+                 ("__GEN__", escape(gen)), ("__SITE__", SITE)):
+        html = html.replace(k, v)
+    return html
+
+
+def render_pdf(html):
+    os.makedirs(os.path.dirname(OUT), exist_ok=True)
+    from playwright.sync_api import sync_playwright
+    with sync_playwright() as p:
+        b = p.chromium.launch()
+        pg = b.new_page()
+        pg.set_content(html, wait_until="networkidle")
+        try:
+            pg.evaluate("document.fonts.ready")
+        except Exception:  # noqa: BLE001
+            pass
+        pg.pdf(path=OUT, format="A4", print_background=True,
+               margin={"top": "0", "bottom": "0", "left": "0", "right": "0"})
+        b.close()
+    print("[digest] 已渲染海报 PDF →", OUT)
 
 
 def send(today):
@@ -189,7 +207,7 @@ def main():
     today = _today()
     with open(EVENTS, encoding="utf-8") as f:
         data = json.load(f)
-    build_pdf(select(data, today), today, data.get("generatedAt", ""))
+    render_pdf(build_html(select(data, today), today, data.get("generatedAt", "")))
     send(today)
 
 
