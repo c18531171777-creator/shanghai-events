@@ -20,7 +20,7 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.cidfonts import UnicodeCIDFont
-from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
+from reportlab.platypus import HRFlowable, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 EVENTS = os.path.join(ROOT, "events.json")
@@ -89,38 +89,53 @@ def select(data, today):
     ]
 
 
+SEC_COLOR = {"本周开票": "#1f6feb", "亲子精选": "#e8643c",
+             "最新上架": "#159b73", "重磅活动": "#d4356e"}
+
+
 def build_pdf(sections, today, gen):
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     doc = SimpleDocTemplate(OUT, pagesize=A4, title="沪上遛遛 本周精选",
-                            topMargin=18 * mm, bottomMargin=16 * mm,
-                            leftMargin=16 * mm, rightMargin=16 * mm)
-    H1 = ParagraphStyle("H1", fontName=FONT, fontSize=20, leading=26,
-                        textColor=colors.HexColor("#7c3aed"))
-    SUB = ParagraphStyle("SUB", fontName=FONT, fontSize=10, leading=14,
-                         textColor=colors.grey)
-    H2 = ParagraphStyle("H2", fontName=FONT, fontSize=14, leading=20,
-                        textColor=colors.HexColor("#1f6feb"), spaceBefore=14, spaceAfter=4)
-    IT = ParagraphStyle("IT", fontName=FONT, fontSize=12, leading=17, spaceBefore=13)
-    META = ParagraphStyle("META", fontName=FONT, fontSize=9.5, leading=13,
-                          textColor=colors.grey, leftIndent=14, spaceAfter=2)
-    story = [Paragraph("沪上遛遛 · 本周精选", H1),
-             Paragraph("%d年%d月%d日 · 上海亲子 / 演出 / 展会 / 赛事"
-                       % (today.year, today.month, today.day), SUB),
-             Spacer(1, 4)]
+                            topMargin=14 * mm, bottomMargin=14 * mm,
+                            leftMargin=15 * mm, rightMargin=15 * mm)
+    W = doc.width
+    mt = ParagraphStyle("mt", fontName=FONT, fontSize=25, leading=29, textColor=colors.white)
+    ms = ParagraphStyle("ms", fontName=FONT, fontSize=10.5, leading=16,
+                        textColor=colors.HexColor("#d9ccf7"))
+    it = ParagraphStyle("it", fontName=FONT, fontSize=12, leading=16, spaceBefore=9)
+    meta = ParagraphStyle("meta", fontName=FONT, fontSize=9.5, leading=13,
+                          textColor=colors.HexColor("#6a6a6a"), leftIndent=16, spaceAfter=1)
+    foot = ParagraphStyle("foot", fontName=FONT, fontSize=9, leading=14,
+                          textColor=colors.HexColor("#888888"))
+
+    mast = Table([[[Paragraph("沪上遛遛", mt),
+                    Paragraph("上海亲子 | 演出 | 展会 | 赛事 —— 日更雷达", ms),
+                    Paragraph("%d年%d月%d日 本周精选" % (today.year, today.month, today.day), ms)]]],
+                 colWidths=[W])
+    mast.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#3f2d7a")),
+        ("LEFTPADDING", (0, 0), (-1, -1), 16), ("RIGHTPADDING", (0, 0), (-1, -1), 16),
+        ("TOPPADDING", (0, 0), (-1, -1), 15), ("BOTTOMPADDING", (0, 0), (-1, -1), 15),
+    ]))
+    story = [mast, Spacer(1, 2)]
+
     seen, any_item = set(), False
     for name, items in sections:
         rows = [e for e in items if e.get("title") and e["title"] not in seen]
         if not rows:
             continue
         any_item = True
-        story.append(Paragraph(name, H2))
-        for e in rows:
+        hexc = SEC_COLOR.get(name, "#555555")
+        sst = ParagraphStyle("s" + name, fontName=FONT, fontSize=14, leading=18,
+                             textColor=colors.white, backColor=colors.HexColor(hexc),
+                             borderPadding=(7, 10, 7, 10), spaceBefore=18, spaceAfter=9)
+        story.append(Paragraph("%s（%d）" % (name, len(rows)), sst))
+        for i, e in enumerate(rows):
             seen.add(e["title"])
             t = escape(e["title"])
             url = e.get("official_url", "")
-            link = '<a href="%s" color="#1f6feb">%s</a>' % (escape(url), t) if url else t
-            bullet = '<font color="#7c3aed">●</font> '
-            story.append(Paragraph(bullet + link, IT))
+            link = '<a href="%s" color="#22357a">%s</a>' % (escape(url), t) if url else t
+            story.append(Paragraph('<font color="%s">●</font> %s' % (hexc, link), it))
             bits = [_fmtdate(e, today)]
             if e.get("venue") and e["venue"] != e["title"]:
                 bits.append(escape(e["venue"]))
@@ -129,11 +144,17 @@ def build_pdf(sections, today, gen):
             ot = e.get("open_ticket_time")
             if name == "本周开票" and ot:
                 bits.insert(0, "开票 " + escape(ot))
-            story.append(Paragraph(" | ".join(bits), META))
+            story.append(Paragraph(" | ".join(bits), meta))
+            if i < len(rows) - 1:
+                story.append(HRFlowable(width="100%", thickness=0.4,
+                                        color=colors.HexColor("#e7e7ec"),
+                                        spaceBefore=7, spaceAfter=0))
     if not any_item:
-        story.append(Paragraph("本周暂无精选(数据更新中,点下方在线版查看全部)。", IT))
-    story.append(Spacer(1, 12))
-    story.append(Paragraph("数据更新于 %s · 在线版 %s" % (escape(gen), SITE), SUB))
+        story.append(Paragraph("本周暂无精选,点下方在线版查看全部。", it))
+    story.append(Spacer(1, 16))
+    story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor("#3f2d7a"),
+                            spaceAfter=6))
+    story.append(Paragraph("数据更新于 %s &nbsp;|&nbsp; 在线版 %s" % (escape(gen), SITE), foot))
     doc.build(story)
     print("[digest] 已生成 PDF →", OUT)
 
