@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-06-24 08:39 北京时间",
+ "generatedAt": "2026-06-24 08:52 北京时间",
  "count": 151,
  "health": {
   "curated": {
@@ -1670,27 +1670,6 @@
    "sessions": []
   },
   {
-   "title": "【1300场】四周年狂欢5折起！开心麻花喜剪吹沉浸剧场《疯狂理发店》",
-   "type": "演出",
-   "venue": "疯狂理发店-开心麻花喜剪吹沉浸剧场",
-   "district": "",
-   "start_date": "2026-06-26",
-   "end_date": "",
-   "open_ticket_time": "",
-   "price_range": "",
-   "kid_friendly": false,
-   "age_range": "",
-   "tags": [],
-   "official_url": "https://search.damai.cn/search.html?keyword=1300%E5%9C%BA%20%E5%9B%9B%E5%91%A8%E5%B9%B4%E7%8B%82%E6%AC%A25%E6%8A%98%E8%B5%B7%EF%BC%81%E5%BC%80%E5%BF%83%E9%BA%BB%E8%8A%B1%E5%96%9C%E5%89%AA%E5%90%B9%E6%B2%89%E6%B5%B8",
-   "featured": false,
-   "note": "",
-   "first_seen": "2026-06-21",
-   "kind": "临时",
-   "audience": "公众",
-   "kid_unfit": false,
-   "sessions": []
-  },
-  {
    "title": "【暑假爆笑合家欢】【最强IP重生】开心麻花沉浸式爆笑互动喜剧《夏洛特烦恼》之逆转未来",
    "type": "演出",
    "venue": "开心麻花U空间",
@@ -1729,6 +1708,27 @@
    "featured": false,
    "note": "",
    "first_seen": "2000-01-01",
+   "kind": "临时",
+   "audience": "公众",
+   "kid_unfit": false,
+   "sessions": []
+  },
+  {
+   "title": "【1300场】四周年狂欢5折起！开心麻花喜剪吹沉浸剧场《疯狂理发店》",
+   "type": "演出",
+   "venue": "疯狂理发店-开心麻花喜剪吹沉浸剧场",
+   "district": "",
+   "start_date": "2026-06-26",
+   "end_date": "",
+   "open_ticket_time": "",
+   "price_range": "",
+   "kid_friendly": false,
+   "age_range": "",
+   "tags": [],
+   "official_url": "https://search.damai.cn/search.html?keyword=1300%E5%9C%BA%20%E5%9B%9B%E5%91%A8%E5%B9%B4%E7%8B%82%E6%AC%A25%E6%8A%98%E8%B5%B7%EF%BC%81%E5%BC%80%E5%BF%83%E9%BA%BB%E8%8A%B1%E5%96%9C%E5%89%AA%E5%90%B9%E6%B2%89%E6%B5%B8",
+   "featured": false,
+   "note": "",
+   "first_seen": "2026-06-21",
    "kind": "临时",
    "audience": "公众",
    "kid_unfit": false,
